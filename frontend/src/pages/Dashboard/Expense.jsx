@@ -9,6 +9,7 @@ import AddExpenseForm from "../../components/Expense/AddExpenseForm";
 import { toast } from "react-hot-toast";
 import ExpenseList from "../../components/Expense/ExpenseList";
 import DeleteAlert from "../../components/DeleteAlert";
+import CSVImport from "../../components/CSV/CSVImport";
 
 const Expense = () => {
   useUserAuth();
@@ -120,6 +121,7 @@ const Expense = () => {
   return (
     <DashboardLayout activeMenu="Expense">
       <div className="my-5 mx-auto">
+        <CSVImport onImportSuccess={fetchExpenseDetails} />
         <div className="grid grid-cols-1 gap-6">
           <div className="">
             <ExpenseOverview

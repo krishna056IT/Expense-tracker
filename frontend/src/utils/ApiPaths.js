@@ -7,7 +7,7 @@ export const API_PATHS = {
     GET_USER_INFO: "/api/auth/getUser",
   },
   DASHBOARD: {
-    GET_DATA: "api/dashboard",
+    GET_DATA: "/api/dashboard",
   },
   INCOME: {
     ADD_INCOME: "/api/income/add",
@@ -21,7 +21,14 @@ export const API_PATHS = {
     DELETE_EXPENSE: (expenseId) => `/api/expense/${expenseId}`,
     DOWNLOAD_EXPENSE: "/api/expense/downloadexcel",
   },
+   CSV: {
+    IMPORT: "/api/csv/import",
+  },
   IMAGE: {
     UPLOAD_IMAGE: "/api/auth/upload-image",
   },
+  OCR: {
+  ANALYZE: "/api/ocr/analyze",
+},
 };
+
