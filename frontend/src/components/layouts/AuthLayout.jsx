@@ -7,7 +7,7 @@ const AuthLayout = ({ children }) => {
   return (
     <div className="auth-layout">
       <div className="auth-left">
-        <h2 className="auth-heading">MoneyMate</h2>
+        <h2 className="auth-heading">MoneyMate<span className="text-[#d97706]">.</span></h2>
         {children}
       </div>
 
@@ -19,9 +19,9 @@ const AuthLayout = ({ children }) => {
         <div className="grid grid-cols-1 z-20">
           <StatsInfoCard
             icon={<LuTrendingUpDown />}
-            label="Track Your Income & Expenses"
-            value="430,000"
-            color="bg-purple-600"
+            label="Monthly spending target"
+            value="Set your own"
+            color="bg-[#0f766e]"
           />
         </div>
 
@@ -39,7 +39,7 @@ const StatsInfoCard = ({ icon, label, value, color }) => {
       <div className={`stats-icon ${color}`}>{icon}</div>
       <div className="stats-info">
         <h6>{label}</h6>
-        <span>₹{value}</span>
+        <span>{value}</span>
       </div>
     </div>
   );

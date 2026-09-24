@@ -1,19 +1,33 @@
 /* Container layout */
 .auth-layout {
     display: flex;
+  min-height: 100vh;
+  background: #f6f8f5;
   }
   
   /* Left section */
   .auth-left {
     width: 100vw;
     height: 100vh;
-    padding: 2rem 3rem;
+    padding: 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    background: #f6f8f5;
+  }
+  @media (min-width: 640px) {
+    .auth-left {
+      padding: 2rem 4rem;
+    }
   }
   
   .auth-heading {
     font-size: 1.125rem;
-    font-weight: 500;
-    color: black;
+    font-family: var(--font-display);
+    font-weight: 800;
+    color: #172a27;
+    letter-spacing: -0.03em;
   }
   
   /* Right section */
@@ -23,14 +37,14 @@
   @media (min-width: 768px) {
     .auth-right {
       display: block;
-      width: 40vw;
+      width: 42vw;
       height: 100vh;
-      background-color: #f5f3ff; /* bg-violet-50 */
+      background-color: #dcefe7;
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
       overflow: hidden;
-      padding: 2rem;
+      padding: 3rem;
       position: relative;
     }
   }
@@ -40,7 +54,7 @@
     width: 12rem;
     height: 12rem;
     border-radius: 40px;
-    background-color: #9333ea; /* bg-purple-600 */
+    background-color: #0f766e;
     position: absolute;
     top: -1.75rem;
     left: -1.25rem;
@@ -50,7 +64,7 @@
     width: 12rem;
     height: 14rem;
     border-radius: 40px;
-    border: 20px solid #c026d3; /* border-fuchsia-600 */
+    border: 20px solid #f2b84b;
     position: absolute;
     top: 30%;
     right: -2.5rem;
@@ -60,7 +74,7 @@
     width: 12rem;
     height: 12rem;
     border-radius: 40px;
-    background-color: #8b5cf6; /* bg-violet-500 */
+    background-color: #dc5a5a;
     position: absolute;
     bottom: -1.75rem;
     left: -1.25rem;
@@ -73,8 +87,8 @@
     background-color: white;
     padding: 1rem;
     border-radius: 0.75rem;
-    box-shadow: 0 2px 6px rgba(128, 90, 213, 0.1); /* shadow-purple-400/10 */
-    border: 1px solid rgba(229, 231, 235, 0.5);
+    box-shadow: 0 12px 30px rgba(23, 42, 39, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     z-index: 10;
   }
   
@@ -102,14 +116,14 @@
   
   /* Card image */
   .auth-image {
-    width: 16rem;
+    width: 17rem;
     position: absolute;
     bottom: 2.5rem;
     box-shadow: 0 10px 25px rgba(96, 165, 250, 0.15);
   }
   @media (min-width: 1024px) {
     .auth-image {
-      width: 90%;
+      width: 86%;
     }
   }
   
