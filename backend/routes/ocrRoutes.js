@@ -1,7 +1,7 @@
 const express = require("express");
 const { analyzeImage } = require("../controllers/ocrController");
 const { protect } = require("../middleware/authMiddleware");
-const upload = require("../middleware/uploadMiddleware");
+const upload = require("../middleware/imageUploadMiddleware");
 
 const router = express.Router();
 

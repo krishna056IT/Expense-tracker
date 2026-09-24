@@ -136,19 +136,22 @@ npm run preview
 
 The frontend development server usually runs on `http://localhost:5173` (Vite default) unless configured otherwise.
 
-Important: If your backend runs on a different origin, make sure the backend allows CORS from your frontend origin.
+Important: If your backend runs on a different origin, set `CLIENT_URL` to the frontend origin so the backend allows it through CORS.
 
 ## Environment variables (.env)
 
-Create a `.env` file in the `backend/` directory. Typical variables used by this project (adjust names and values to match `backend/config/db.js` and `server.js`):
+Create a `.env` file in the `backend/` directory. The required variable names are:
 
 ```text
 # example .env
-PORT=5000
-MONGO_URL=mongodb://localhost:27017/expense-tracker
+PORT=8000
+MONGO_URI=mongodb://localhost:27017/expense-tracker
 JWT_SECRET=your_jwt_secret_here
 CLIENT_URL=http://localhost:5173
+GOOGLE_VISION_API_KEY=your_google_vision_api_key_here
 ```
+
+For the Vite frontend, create `frontend/.env` with `VITE_API_URL=http://localhost:8000` for local development. Use the deployed backend URL for production.
 
 Notes:
 - Keep secrets out of version control. Add `.env` to `.gitignore` (already present in the backend folder).
