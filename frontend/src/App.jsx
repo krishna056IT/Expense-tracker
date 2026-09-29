@@ -5,7 +5,9 @@ import {
   Routes,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
+import { useEffect } from "react";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Home from "./pages/Dashboard/Home";
@@ -20,6 +22,7 @@ function App() {
     <UserProvider>
       <div>
         <Router>
+          <AuthNavigationHandler />
           <Routes>
             <Route path="/" element={<Root />} />
             <Route path="/login" exact element={<Login />} />
@@ -50,8 +53,22 @@ const Root = () => {
   const isAuthenticated = localStorage.getItem("token");
 
   return isAuthenticated ? (
-    <Navigate to="/dashboard" />
+    <Navigate to="/dashboard" replace />
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/login" replace />
   );
+};
+
+const AuthNavigationHandler = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleUnauthorized = () => navigate("/login", { replace: true });
+    window.addEventListener("moneymate:unauthorized", handleUnauthorized);
+    return () => {
+      window.removeEventListener("moneymate:unauthorized", handleUnauthorized);
+    };
+  }, [navigate]);
+
+  return null;
 };
