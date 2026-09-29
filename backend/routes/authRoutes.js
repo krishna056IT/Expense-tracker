@@ -5,6 +5,8 @@ const upload = require("../middleware/uploadMiddleware");
 const {
   registerUser,
   loginUser,
+  verifyEmail,
+  resendVerification,
   getUserInfo,
 } = require("../controllers/authController");
 
@@ -12,6 +14,8 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/verify-email", verifyEmail);
+router.post("/resend-verification", resendVerification);
 router.get("/getUser", protect, getUserInfo);
 
 router.post("/upload-image", upload.single("image"), (req, res) => {

@@ -9,6 +9,8 @@ export const API_PATHS = {
   AUTH: {
     LOGIN: "/api/auth/login",
     REGISTER: "/api/auth/register",
+    VERIFY_EMAIL: "/api/auth/verify-email",
+    RESEND_VERIFICATION: "/api/auth/resend-verification",
     GET_USER_INFO: "/api/auth/getUser",
   },
   DASHBOARD: {

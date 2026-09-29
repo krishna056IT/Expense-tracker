@@ -11,6 +11,8 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
+      lowercase: true,
     },
     password: {
       type: String,
@@ -19,6 +21,18 @@ const UserSchema = new mongoose.Schema(
     profilePicUrl: {
       type: String,
       default: null,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: true,
+    },
+    emailVerificationTokenHash: {
+      type: String,
+      select: false,
+    },
+    emailVerificationExpires: {
+      type: Date,
+      select: false,
     },
   },
   { timestamps: true }

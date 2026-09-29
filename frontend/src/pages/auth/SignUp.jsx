@@ -15,6 +15,10 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
+  const [verificationPending, setVerificationPending] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationMessage, setVerificationMessage] = useState("");
+  const [resendingCode, setResendingCode] = useState(false);
 
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -28,7 +32,8 @@ const SignUp = () => {
       return;
     }
 
-    if (!validateEmail(email)) {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!validateEmail(normalizedEmail)) {
       setError("Please enter your email address");
       return;
     }
@@ -48,18 +53,21 @@ const SignUp = () => {
 
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
         fullName,
-        email,
+        email: normalizedEmail,
         password,
         profilePicUrl,
       });
 
-      const { token, user } = response.data;
-      if (token) {
-        localStorage.setItem("token", token);
-        updateUser(user);
-        navigate("/dashboard");
-      }
+      setEmail(normalizedEmail);
+      setVerificationPending(true);
+      setVerificationMessage(response.data.message);
     } catch (error) {
+      if (error.response?.data?.code === "EMAIL_DELIVERY_FAILED") {
+        setEmail(normalizedEmail);
+        setVerificationPending(true);
+        setVerificationMessage(error.response.data.message);
+        return;
+      }
       if (error.response && error.response.data.message) {
         setError(error.response.data.message);
       } else {
@@ -68,14 +76,83 @@ const SignUp = () => {
     }
   };
 
+  const handleVerifyEmail = async (event) => {
+    event.preventDefault();
+    setError("");
+
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.VERIFY_EMAIL, {
+        email: email.trim().toLowerCase(),
+        code: verificationCode,
+      });
+      localStorage.setItem("token", response.data.token);
+      updateUser(response.data.user);
+      navigate("/dashboard");
+    } catch (verifyError) {
+      setError(
+        verifyError.response?.data?.message || "Unable to verify your email. Please try again."
+      );
+    }
+  };
+
+  const handleResendCode = async () => {
+    setResendingCode(true);
+    setError("");
+    try {
+      const response = await axiosInstance.post(
+        API_PATHS.AUTH.RESEND_VERIFICATION,
+        { email: email.trim().toLowerCase() }
+      );
+      setVerificationMessage(response.data.message);
+    } catch (resendError) {
+      setError(
+        resendError.response?.data?.message || "Unable to resend the verification code."
+      );
+    } finally {
+      setResendingCode(false);
+    }
+  };
+
   return (
     <AuthLayout>
       <div className="lg:w-[100%] h-auto md:h-full mt-10 md:mt-10 flex flex-col justify-center">
         <h3 className="text-xl font-semibold text-black">Create an Account</h3>
         <p className="text-xs text-slate-700 mt-[5px] mb-6">
-          Join Today By entering your details.
+          {verificationPending
+            ? "Verify your email to finish creating your account."
+            : "Join Today By entering your details."}
         </p>
 
+        {verificationPending ? (
+          <form onSubmit={handleVerifyEmail}>
+            <p className="text-sm text-slate-700 mb-4">{verificationMessage}</p>
+            <Input
+              type="text"
+              value={verificationCode}
+              onChange={(event) => setVerificationCode(event.target.value)}
+              label="Email verification code"
+              placeholder="6-digit code"
+            />
+            {error && <p className="text-red-500 text-xs py-2.5">{error}</p>}
+            <button className="btn-primary" type="submit">
+              Verify Email
+            </button>
+            <button
+              className="w-full text-sm font-semibold text-[#0f766e] p-3"
+              type="button"
+              disabled={resendingCode}
+              onClick={handleResendCode}
+            >
+              {resendingCode ? "Sending..." : "Resend verification code"}
+            </button>
+            <p className="text-[13px] text-slate-800 mt-3">
+              Already have an account?{" "}
+              <Link className="font-medium font-primary underline" to="/login">
+                Login
+              </Link>
+            </p>
+          </form>
+        ) : (
         <form onSubmit={handleSignUp}>
           <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
 
@@ -90,7 +167,10 @@ const SignUp = () => {
             <Input
               type="text"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
               label="Email Address"
               placeholder="example@gmail.com"
             />
@@ -119,6 +199,7 @@ const SignUp = () => {
             </Link>
           </p>
         </form>
+        )}
       </div>
     </AuthLayout>
   );
