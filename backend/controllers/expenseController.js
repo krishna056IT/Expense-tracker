@@ -1,5 +1,6 @@
 const xlsx = require("xlsx");
 const Expense = require("../models/Expense");
+const getMonthDateRange = require("../utils/monthDateRange");
 
 exports.addExpense = async (req, res) => {
   const userId = req.user.id;
@@ -11,12 +12,19 @@ exports.addExpense = async (req, res) => {
       return res.status(400).json({ message: "All fileds required" });
     }
 
+    const expenseDate = new Date(date);
+    if (Number.isNaN(expenseDate.getTime()) || expenseDate > new Date()) {
+      return res.status(400).json({
+        message: "Expense date must be valid and cannot be in the future",
+      });
+    }
+
     const newExpense = new Expense({
       userId,
       icon,
       category,
       amount,
-      date: new Date(date),
+      date: expenseDate,
     });
 
     await newExpense.save();
@@ -30,7 +38,37 @@ exports.getAllExpense = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const expense = await Expense.find({ userId }).sort({ date: -1 });
+    const { month, year } = req.query;
+    const filter = { userId };
+
+    if (month !== undefined || year !== undefined) {
+      const monthNumber = Number(month);
+      const yearNumber = Number(year);
+      const dateRange = getMonthDateRange(monthNumber, yearNumber);
+
+      if (!dateRange) {
+        return res.status(400).json({
+          message: "A valid month and year are required",
+        });
+      }
+
+      const now = new Date();
+      const currentMonthStart = Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        1
+      );
+
+      if (dateRange.start.getTime() > currentMonthStart) {
+        return res.status(400).json({
+          message: "Future expense periods are not available",
+        });
+      }
+
+      filter.date = { $gte: dateRange.start, $lt: dateRange.end };
+    }
+
+    const expense = await Expense.find(filter).sort({ date: -1 });
     res.json(expense);
   } catch (err) {
     res.status(500).json({ message: `Internal server Error`, error: err });

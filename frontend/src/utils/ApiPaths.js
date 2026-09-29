@@ -13,6 +13,7 @@ export const API_PATHS = {
   },
   DASHBOARD: {
     GET_DATA: "/api/dashboard",
+    MONTHLY_COMPARISON: "/api/dashboard/monthly-comparison",
   },
   INCOME: {
     ADD_INCOME: "/api/income/add",

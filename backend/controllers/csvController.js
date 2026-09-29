@@ -74,11 +74,17 @@ exports.importCSV = async (req, res) => {
           return;
         }
 
+        const expenseDate = new Date(date);
+        if (expenseDate > new Date()) {
+          errors.push(`Row ${rowNumber}: Expense date cannot be in the future`);
+          return;
+        }
+
         expenses.push({
           userId,
           category,
           amount,
-          date: new Date(date),
+          date: expenseDate,
         });
       }
 

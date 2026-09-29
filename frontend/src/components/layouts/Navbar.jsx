@@ -30,7 +30,10 @@ const Navbar = ({ activeMenu }) => {
 
       {openSideMenu && (
         <div className="fixed inset-0 top-[60px] -ml-4 bg-[#172a27] lg:hidden">
-          <SideMenu activeMenu={activeMenu} />
+          <SideMenu
+            activeMenu={activeMenu}
+            onNavigate={() => setOpenSideMenu(false)}
+          />
         </div>
       )}
     </div>

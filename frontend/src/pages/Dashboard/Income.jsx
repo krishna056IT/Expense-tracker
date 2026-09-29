@@ -82,7 +82,7 @@ const Income = () => {
       setOpenDeleteAlert({ show: false, data: null });
       toast.success(`Income details deleted successfully`);
       fetchIncomeDetails();
-    } catch (error) {
+    } catch (err) {
       console.error(
         `Error deleting income:`,
         err.response?.data?.message || err.message

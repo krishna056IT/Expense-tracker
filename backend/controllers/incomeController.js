@@ -1,5 +1,6 @@
 const xlsx = require('xlsx')
 const Income = require("../models/Income");
+const getMonthDateRange = require("../utils/monthDateRange");
 
 exports.addIncome = async (req, res) => {
   const userId = req.user.id;
@@ -30,7 +31,35 @@ exports.getAllIncome = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const income = await Income.find({ userId }).sort({ date: -1 });
+    const { month, year } = req.query;
+    const filter = { userId };
+
+    if (month !== undefined || year !== undefined) {
+      const dateRange = getMonthDateRange(Number(month), Number(year));
+
+      if (!dateRange) {
+        return res.status(400).json({
+          message: "A valid month and year are required",
+        });
+      }
+
+      const now = new Date();
+      const currentMonthStart = Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        1
+      );
+
+      if (dateRange.start.getTime() > currentMonthStart) {
+        return res.status(400).json({
+          message: "Future income periods are not available",
+        });
+      }
+
+      filter.date = { $gte: dateRange.start, $lt: dateRange.end };
+    }
+
+    const income = await Income.find(filter).sort({ date: -1 });
     res.json(income);
   } catch (err) {
     res.status(500).json({ message: `Internal server Error`, error: err });

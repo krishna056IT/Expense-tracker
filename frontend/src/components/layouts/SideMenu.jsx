@@ -1,19 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { SIDE_MENU_DATA } from "../../utils/data";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import CharAvatar from "../cards/CharAvatar";
+import Modal from "../Modal";
 
-const SideMenu = ({ activeMenu }) => {
+const SideMenu = ({ activeMenu, onNavigate }) => {
   const { user, clearUser } = useContext(UserContext);
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
 
   const navigate = useNavigate();
 
   const handleClick = (route) => {
     if (route === "logout") {
-      handleLogout();
+      setConfirmSignOut(true);
     } else {
       navigate(route);
+      onNavigate?.();
     }
   };
 
@@ -24,6 +27,7 @@ const SideMenu = ({ activeMenu }) => {
   };
 
   return (
+    <>
     <div className="w-64 h-[calc(100vh-60px)] bg-[#172a27] text-white p-5 sticky top-[60px] z-20">
       <div className="flex items-center gap-3 mt-3 mb-8 pb-6 border-b border-white/10">
         {user?.profilePicUrl ? (
@@ -59,6 +63,26 @@ const SideMenu = ({ activeMenu }) => {
         </button>
       ))}
     </div>
+    <Modal
+      isOpen={confirmSignOut}
+      onClose={() => setConfirmSignOut(false)}
+      title="Sign Out"
+    >
+      <p className="text-sm text-gray-600">Are you sure you want to sign out?</p>
+      <div className="flex justify-end gap-2 pt-2">
+        <button
+          type="button"
+          className="add-btn"
+          onClick={() => setConfirmSignOut(false)}
+        >
+          Cancel
+        </button>
+        <button type="button" className="add-btn add-btn-fill" onClick={handleLogout}>
+          Sign Out
+        </button>
+      </div>
+    </Modal>
+    </>
   );
 };
 export default SideMenu;

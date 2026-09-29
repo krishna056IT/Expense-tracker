@@ -3,13 +3,18 @@ import { LuArrowRight } from "react-icons/lu";
 import moment from "moment";
 import TransactionInfoCard from "../cards/TransactionInfoCard";
 
-const RecentTransactions = ({ onSeeMore, transactions }) => {
+const RecentTransactions = ({
+  onSeeMore,
+  transactions,
+  title = "Recent Transactions",
+  loading = false,
+}) => {
   const hasTransactions = transactions && transactions.length > 0;
 
   return (
     <div className="card">
       <div className="flex items-center justify-between">
-        <h5 className="text-lg">Recent Transactions</h5>
+        <h5 className="text-lg">{title}</h5>
 
         <button className="card-btn" onClick={onSeeMore}>
           See All <LuArrowRight className="text-base" />
@@ -17,7 +22,11 @@ const RecentTransactions = ({ onSeeMore, transactions }) => {
       </div>
 
       <div className="mt-6">
-        {hasTransactions ? (
+        {loading ? (
+          <div className="flex min-h-[250px] items-center justify-center text-sm text-[#78908a]">
+            Loading transactions...
+          </div>
+        ) : hasTransactions ? (
           transactions.slice(0, 5).map((item) => (
             <TransactionInfoCard
               key={item._id}

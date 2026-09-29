@@ -1,4 +1,4 @@
-import { LuLayoutDashboard, LuHandCoins, LuWalletMinimal, LuLogOut } from 'react-icons/lu'
+import { LuLayoutDashboard, LuHandCoins, LuWalletMinimal, LuLogOut, LuChartBar } from 'react-icons/lu'
 
 export const SIDE_MENU_DATA = [
     {
@@ -20,8 +20,14 @@ export const SIDE_MENU_DATA = [
         path: "/expense",
     },
     {
+        id: "04",
+        label: "Monthly Comparison",
+        icon: LuChartBar,
+        path: "/monthly-comparison",
+    },
+    {
         id: "06",
-        label: "Logout",
+        label: "Sign Out",
         icon: LuLogOut,
         path: "logout",
     },

@@ -88,7 +88,7 @@ const Expense = () => {
       setOpenDeleteAlert({ show: false, data: null });
       toast.success(`Expense details deleted successfully`);
       fetchExpenseDetails();
-    } catch (error) {
+    } catch (err) {
       console.error(
         `Error deleting expense:`,
         err.response?.data?.message || err.message

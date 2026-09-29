@@ -3,20 +3,30 @@ import { LuArrowRight } from "react-icons/lu";
 import TransactionInfoCard from "../cards/TransactionInfoCard";
 import moment from "moment";
 
-const ExpenseTransactions = ({ transactions, onSeeMore }) => {
+const ExpenseTransactions = ({
+  transactions,
+  onSeeMore,
+  title = "Expenses",
+  emptyMessage = "No expenses yet",
+  loading = false,
+}) => {
   const hasTransactions = transactions && transactions.length > 0;
 
   return (
     <div className="card">
       <div className="flex items-center justify-between">
-        <h5 className="text-lg">Expenses</h5>
+        <h5 className="text-lg">{title}</h5>
         <button className="card-btn" onClick={onSeeMore}>
           See All <LuArrowRight className="text-base" />
         </button>
       </div>
 
       <div className="mt-6">
-        {hasTransactions ? (
+        {loading ? (
+          <div className="flex min-h-[250px] items-center justify-center text-sm text-[#78908a]">
+            Loading expenses...
+          </div>
+        ) : hasTransactions ? (
           transactions.slice(0, 5).map((expense) => (
             <TransactionInfoCard
               key={expense._id}
@@ -29,10 +39,10 @@ const ExpenseTransactions = ({ transactions, onSeeMore }) => {
             />
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center py-10 px-4">
+          <div className="flex min-h-[250px] flex-col items-center justify-center py-10 px-4">
             <div className="w-20 h-20 mb-4 rounded-full bg-red-50 flex items-center justify-center">
               <svg 
-                className="w-10 h-10 text-red-300" 
+                className="w-10 h-10 text-red-400" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24" 
@@ -46,11 +56,8 @@ const ExpenseTransactions = ({ transactions, onSeeMore }) => {
                 />
               </svg>
             </div>
-            <p className="text-gray-400 text-lg font-medium mb-2">
-              No expenses yet
-            </p>
-            <p className="text-gray-300 text-sm text-center max-w-xs">
-              Track your spending by adding expense transactions to see them here.
+            <p className="text-[#45635d] text-lg font-semibold mb-2 text-center">
+              {emptyMessage}
             </p>
           </div>
         )}

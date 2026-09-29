@@ -40,6 +40,7 @@ const AddExpenseForm = ({ onAddExpense }) => {
         label="Date"
         placeholder=""
         type="date"
+        max={new Date().toISOString().slice(0, 10)}
       />
       <div className="flex justify-end mt-6">
         <button

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { prepareExpenseBarChartData } from "../../utils/helper";
 import CustomBarChart from "../Charts/CustomBarChart";
 
-const Last30DaysExpenses = ({ data }) => {
+const Last30DaysExpenses = ({ data, title = "Last 30 Days Expenses", loading = false }) => {
   const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
@@ -15,17 +15,21 @@ const Last30DaysExpenses = ({ data }) => {
   return (
     <div className="card col-span-1">
       <div className="flex items-center justify-between">
-        <h5 className="text-lg">Last 30 Days Expenses</h5>
+        <h5 className="text-lg">{title}</h5>
       </div>
 
       <div className="mt-6">
-        {hasData ? (
+        {loading ? (
+          <div className="flex min-h-[250px] items-center justify-center text-sm text-[#78908a]">
+            Loading monthly expenses...
+          </div>
+        ) : hasData ? (
           <CustomBarChart data={chartData} />
         ) : (
-          <div className="flex flex-col items-center justify-center py-12 px-4">
+          <div className="flex min-h-[250px] flex-col items-center justify-center py-12 px-4">
             <div className="w-20 h-20 mb-4 rounded-full bg-orange-50 flex items-center justify-center">
               <svg 
-                className="w-10 h-10 text-orange-300" 
+                className="w-10 h-10 text-orange-400" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24" 
@@ -39,11 +43,11 @@ const Last30DaysExpenses = ({ data }) => {
                 />
               </svg>
             </div>
-            <p className="text-gray-400 text-lg font-medium mb-2">
+            <p className="text-[#45635d] text-lg font-semibold mb-2">
               No Recent Expenses
             </p>
-            <p className="text-gray-300 text-sm text-center max-w-xs">
-              No expenses recorded in the last 30 days. Your spending chart will appear here.
+            <p className="text-[#78908a] text-sm text-center max-w-xs">
+              No expenses recorded for this month. Your spending chart will appear here.
             </p>
           </div>
         )}
