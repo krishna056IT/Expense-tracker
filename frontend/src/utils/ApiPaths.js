@@ -11,7 +11,13 @@ export const API_PATHS = {
     REGISTER: "/api/auth/register",
     VERIFY_EMAIL: "/api/auth/verify-email",
     RESEND_VERIFICATION: "/api/auth/resend-verification",
+
+    FORGOT_PASSWORD: "/api/auth/forgot-password",
+    VERIFY_RESET_OTP: "/api/auth/verify-reset-otp",
+    RESET_PASSWORD: "/api/auth/reset-password",
+
     GET_USER_INFO: "/api/auth/getUser",
+    UPDATE_PROFILE: "/api/auth/profile",
   },
   DASHBOARD: {
     GET_DATA: "/api/dashboard",

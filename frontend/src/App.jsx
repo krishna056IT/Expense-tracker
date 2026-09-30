@@ -10,10 +10,12 @@ import {
 import { useEffect } from "react";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/Dashboard/Home";
 import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
 import MonthlyComparison from "./pages/Dashboard/MonthlyComparison";
+import Settings from "./pages/Dashboard/Settings";
 import UserProvider from "./context/UserContext";
 import { Toaster } from "react-hot-toast";
 
@@ -27,10 +29,12 @@ function App() {
             <Route path="/" element={<Root />} />
             <Route path="/login" exact element={<Login />} />
             <Route path="/signUp" exact element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/dashboard" exact element={<Home />} />
             <Route path="/income" exact element={<Income />} />
             <Route path="/expense" exact element={<Expense />} />
             <Route path="/monthly-comparison" element={<MonthlyComparison />} />
+            <Route path="/settings" element={<Settings />} />
           </Routes>
         </Router>
       </div>

@@ -62,12 +62,6 @@ const SignUp = () => {
       setVerificationPending(true);
       setVerificationMessage(response.data.message);
     } catch (error) {
-      if (error.response?.data?.code === "EMAIL_DELIVERY_FAILED") {
-        setEmail(normalizedEmail);
-        setVerificationPending(true);
-        setVerificationMessage(error.response.data.message);
-        return;
-      }
       if (error.response && error.response.data.message) {
         setError(error.response.data.message);
       } else {
@@ -153,52 +147,52 @@ const SignUp = () => {
             </p>
           </form>
         ) : (
-        <form onSubmit={handleSignUp}>
-          <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
+          <form onSubmit={handleSignUp}>
+            <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              label="Full Name"
-              placeholder="John Doe"
-              type="text"
-            />
-            <Input
-              type="text"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError("");
-              }}
-              label="Email Address"
-              placeholder="example@gmail.com"
-            />
-
-            <div className="col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                label="Password"
-                placeholder="Min 8 characters"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                label="Full Name"
+                placeholder="John Doe"
+                type="text"
               />
+              <Input
+                type="text"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                }}
+                label="Email Address"
+                placeholder="example@gmail.com"
+              />
+
+              <div className="col-span-2">
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  label="Password"
+                  placeholder="Min 8 characters"
+                />
+              </div>
             </div>
-          </div>
 
-          {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+            {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
-          <button className="btn-primary" type="submit">
-            Sign-up
-          </button>
+            <button className="btn-primary" type="submit">
+              Sign-up
+            </button>
 
-          <p className="text-[13px] text-slate-800 mt-3">
-            Already have an account?{" "}
-            <Link className="font-medium font-primary underline" to="/login">
-              Login
-            </Link>
-          </p>
-        </form>
+            <p className="text-[13px] text-slate-800 mt-3">
+              Already have an account?{" "}
+              <Link className="font-medium font-primary underline" to="/login">
+                Login
+              </Link>
+            </p>
+          </form>
         )}
       </div>
     </AuthLayout>
