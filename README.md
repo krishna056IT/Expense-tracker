@@ -149,15 +149,7 @@ MONGO_URI=mongodb://localhost:27017/expense-tracker
 JWT_SECRET=your_jwt_secret_here
 CLIENT_URL=http://localhost:5173
 GOOGLE_VISION_API_KEY=your_google_vision_api_key_here
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your_smtp_username
-SMTP_PASS=your_smtp_password
-EMAIL_FROM=MoneyMate <no-reply@example.com>
 ```
-
-SMTP settings are required for signup email verification. New accounts remain unverified until the emailed code is entered; verification codes expire after 10 minutes. Existing accounts are treated as verified for backward compatibility.
 
 For the Vite frontend, create `frontend/.env` with `VITE_API_URL=http://localhost:8000` for local development. Use the deployed backend URL for production.
 

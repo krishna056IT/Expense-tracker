@@ -5,11 +5,6 @@ const upload = require("../middleware/uploadMiddleware");
 const {
   registerUser,
   loginUser,
-  verifyEmail,
-  resendVerification,
-  forgotPassword,
-  verifyResetOTP,
-  resetPassword,
   getUserInfo,
   updateUserProfile,
 } = require("../controllers/authController");
@@ -18,13 +13,6 @@ const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-
-router.post("/verify-email", verifyEmail);
-router.post("/resend-verification", resendVerification);
-
-router.post("/forgot-password", forgotPassword);
-router.post("/verify-reset-otp", verifyResetOTP);
-router.post("/reset-password", resetPassword);
 
 router.get("/getUser", protect, getUserInfo);
 router.put("/profile", protect, updateUserProfile);

@@ -11,6 +11,18 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const csvRoutes = require("./routes/csvRoutes");
 const ocrRoutes = require("./routes/ocrRoutes");
 
+const requiredEnv = [
+  "MONGO_URI",
+  "JWT_SECRET",
+  "CLIENT_URL",
+];
+const missingEnv = requiredEnv.filter((name) => !process.env[name]);
+
+if (missingEnv.length) {
+  console.error("Missing required environment variables:", missingEnv);
+  process.exit(1);
+}
+
 const app = express();
 app.use(express.json());
 const allowedOrigins = [

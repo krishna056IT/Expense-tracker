@@ -13,9 +13,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [unverifiedEmail, setUnverifiedEmail] = useState("");
-  const [resendMessage, setResendMessage] = useState("");
-  const [resendingCode, setResendingCode] = useState(false);
 
   const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
@@ -47,35 +44,11 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      if (error.response?.data?.code === "EMAIL_NOT_VERIFIED") {
-        setUnverifiedEmail(normalizedEmail);
-        setResendMessage("");
-      } else {
-        setUnverifiedEmail("");
-      }
       if (error.response && error.response.data.message) {
         setError(error.response.data.message);
       } else {
         setError("Something went wrong. Please try again");
       }
-    }
-  };
-
-  const handleResendVerification = async () => {
-    setResendingCode(true);
-    setResendMessage("");
-    try {
-      const response = await axiosInstance.post(
-        API_PATHS.AUTH.RESEND_VERIFICATION,
-        { email: unverifiedEmail }
-      );
-      setResendMessage(response.data.message);
-    } catch (resendError) {
-      setResendMessage(
-        resendError.response?.data?.message || "Unable to resend the verification code."
-      );
-    } finally {
-      setResendingCode(false);
     }
   };
 
@@ -91,11 +64,7 @@ const Login = () => {
           <Input
             type="text"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setUnverifiedEmail("");
-              setResendMessage("");
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             label="Email Address"
             placeholder="example@gmail.com"
           />
@@ -108,34 +77,7 @@ const Login = () => {
             placeholder="Min 8 characters"
           />
 
-          <div className="flex justify-end mb-2">
-          <Link
-            to="/forgot-password"
-            className="text-xs font-semibold text-[#0f766e] underline"
-          >
-            Forgot Password?
-          </Link>
-        </div>
-
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
-
-          {unverifiedEmail && (
-            <div className="pb-2.5">
-              <button
-                type="button"
-                className="text-xs font-semibold text-[#0f766e] underline"
-                disabled={resendingCode}
-                onClick={handleResendVerification}
-              >
-                {resendingCode ? "Sending verification code..." : "Resend verification email"}
-              </button>
-              {resendMessage && (
-                <p role="status" className="mt-1 text-xs text-slate-600">
-                  {resendMessage}
-                </p>
-              )}
-            </div>
-          )}
 
           <button className="btn-primary" type="submit">
             LOGIN
