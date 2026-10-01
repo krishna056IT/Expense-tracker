@@ -58,6 +58,11 @@ const SignUp = () => {
         profilePicUrl,
       });
 
+      if (response.data.emailAccepted !== true) {
+        setError("The verification email was not accepted. Please try again.");
+        return;
+      }
+
       setEmail(normalizedEmail);
       setVerificationPending(true);
       setVerificationMessage(response.data.message);

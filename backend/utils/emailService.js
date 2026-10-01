@@ -15,12 +15,43 @@ const sendVerificationCode = async (email, code) => {
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM || SMTP_USER,
-    to: email,
-    subject: "Verify your MoneyMate email",
-    text: `Your MoneyMate verification code is ${code}. It expires in 10 minutes.`,
+  let info;
+  try {
+    info = await transporter.sendMail({
+      from: process.env.EMAIL_FROM || SMTP_USER,
+      to: email,
+      subject: "Verify your MoneyMate email",
+      text: `Your MoneyMate verification code is ${code}. It expires in 10 minutes.`,
+    });
+  } catch (error) {
+    console.error("EMAIL DELIVERY ERROR:", {
+      code: error.code,
+      responseCode: error.responseCode,
+      command: error.command,
+      response: error.response,
+    });
+    throw error;
+  }
+
+  console.info("EMAIL DELIVERY RESULT:", {
+    messageId: info.messageId,
+    accepted: info.accepted,
+    rejected: info.rejected,
+    response: info.response,
   });
+
+  const recipientAccepted = info.accepted?.some((recipient) => {
+    const address = typeof recipient === "string" ? recipient : recipient?.address;
+    return address?.toLowerCase() === email.toLowerCase();
+  });
+
+  if (!recipientAccepted) {
+    const error = new Error("SMTP server did not accept the recipient");
+    error.code = "EMAIL_RECIPIENT_REJECTED";
+    throw error;
+  }
+
+  return { accepted: true, messageId: info.messageId };
 };
 
 module.exports = { sendVerificationCode };

@@ -32,6 +32,9 @@ const findUserByEmail = async (email) => {
   });
 };
 
+const requiresEmailVerification = (user) =>
+  user.isEmailVerified === false && !user.$isDefault("isEmailVerified");
+
 const sendNewVerificationCode = async (user) => {
   const code = createVerificationCode();
   user.emailVerificationTokenHash = hashVerificationCode(code);
@@ -42,6 +45,9 @@ const sendNewVerificationCode = async (user) => {
 
 const createPublicUser = (user) => {
   const publicUser = user.toObject();
+  if (user.$isDefault("isEmailVerified")) {
+    publicUser.isEmailVerified = true;
+  }
   delete publicUser.password;
   delete publicUser.emailVerificationTokenHash;
   delete publicUser.emailVerificationExpires;
@@ -101,7 +107,6 @@ exports.registerUser = async (req, res) => {
     try {
       await sendVerificationCode(pendingUser.email, code);
     } catch (emailError) {
-      console.error("EMAIL ERROR:", emailError);
       // If email fails, remove the pending signup
       await PendingUser.deleteOne({ _id: pendingUser._id });
 
@@ -116,6 +121,7 @@ exports.registerUser = async (req, res) => {
       message: "Verification code sent. Check your email.",
       email: pendingUser.email,
       requiresVerification: true,
+      emailAccepted: true,
     });
   } catch (err) {
     if (err.code === 11000) {
@@ -148,7 +154,7 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: `Invalid credentials` });
     }
 
-    if (!user.isEmailVerified) {
+    if (requiresEmailVerification(user)) {
       return res.status(403).json({
         code: "EMAIL_NOT_VERIFIED",
         message: "Please verify your email before signing in.",
@@ -281,7 +287,7 @@ exports.resendVerification = async (req, res) => {
       "+emailVerificationTokenHash +emailVerificationExpires"
     );
 
-    if (!user || user.isEmailVerified) {
+    if (!user || !requiresEmailVerification(user)) {
       return res.status(200).json({
         message: "If an unverified account exists, a verification code has been sent.",
       });
@@ -308,7 +314,7 @@ exports.getUserInfo = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    return res.status(200).json(user);
+    return res.status(200).json(createPublicUser(user));
   } catch (err) {
     return res
       .status(500)
@@ -375,7 +381,12 @@ exports.forgotPassword = async (req, res) => {
       message: "Password reset code sent. Check your email.",
     });
   } catch (err) {
-    console.error("Forgot password error:", err);
+    console.error("Forgot password email error:", {
+      code: err.code,
+      responseCode: err.responseCode,
+      command: err.command,
+      response: err.response,
+    });
 
     return res.status(500).json({
       message: "Unable to send password reset code",
