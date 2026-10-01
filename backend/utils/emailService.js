@@ -8,11 +8,16 @@ const sendVerificationCode = async (email, code) => {
     throw new Error("Email delivery is not configured");
   }
 
+  const smtpPassword =
+    SMTP_HOST.toLowerCase() === "smtp.gmail.com"
+      ? SMTP_PASS.replace(/\s+/g, "")
+      : SMTP_PASS;
+
   const transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port,
     secure: process.env.SMTP_SECURE === "true" || port === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
+    auth: { user: SMTP_USER, pass: smtpPassword },
   });
 
   let info;
